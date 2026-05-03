@@ -744,16 +744,26 @@
       author.textContent = selectedPhrase.author;
       inner.style.opacity = '1';
       inner.style.filter = 'blur(8px)';
-      overlay.classList.remove('hidden');
+      overlay.style.display = 'flex';
     }
 
     function revealPhrase() {
       const inner = document.getElementById('phraseInner');
       const overlay = document.getElementById('lockOverlay');
-      overlay.classList.add('hidden');
-      inner.style.filter = 'blur(0)';
-      inner.style.transition = 'filter 0.8s ease';
-      inner.classList.add('reveal-anim');
+
+      // Hide the lock overlay immediately
+      overlay.style.display = 'none';
+
+      // Force reflow so transition fires correctly
+      inner.style.transition = 'none';
+      inner.style.filter = 'blur(8px)';
+      inner.style.opacity = '1';
+      void inner.offsetHeight; // trigger reflow
+
+      // Now animate the unblur
+      inner.style.transition = 'filter 1s ease, opacity 0.6s ease';
+      inner.style.filter = 'blur(0px)';
+      inner.style.opacity = '1';
     }
 
     function showLockedDefault() {
@@ -761,7 +771,9 @@
       const inner = document.getElementById('phraseInner');
       const overlay = document.getElementById('lockOverlay');
       inner.style.opacity = '0';
-      overlay.classList.remove('hidden');
+      inner.style.filter = 'blur(8px)';
+      inner.style.transition = 'none';
+      overlay.style.display = 'flex';
     }
 
     // ─── Send TX ──────────────────────────────────────────────────────────────
@@ -852,9 +864,10 @@
       // Reset phrase display to locked/blurred
       const inner = document.getElementById('phraseInner');
       const overlay = document.getElementById('lockOverlay');
+      inner.style.transition = 'none';
       inner.style.filter = 'blur(8px)';
       inner.classList.remove('reveal-anim');
-      overlay.classList.remove('hidden');
+      overlay.style.display = 'flex';
 
       // Show send TX button again, hide try again
       document.getElementById('txBtn').classList.remove('hidden');
