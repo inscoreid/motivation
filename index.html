@@ -508,6 +508,11 @@
         Отправить транзакцию → Получить послание
       </button>
 
+      <!-- Try Again button (hidden until phrase revealed) -->
+      <button class="btn btn-gold hidden" id="tryAgainBtn" onclick="tryAgain()">
+        ✦ Try Your Luck Again
+      </button>
+
       <!-- TX link -->
       <div style="text-align:center;margin-top:0.75rem;min-height:16px;" id="txLinkContainer"></div>
 
@@ -523,23 +528,74 @@
   <script>
     // ─── Phrases ─────────────────────────────────────────────────────────────
     const phrases = [
-      { type: 'motivation', text: 'Каждый день — это чистый лист. Что ты на нём напишешь?', author: '— Оракул Дня' },
-      { type: 'motivation', text: 'Не бойся медленного движения вперёд. Бойся только стоять на месте.', author: '— Китайская мудрость' },
-      { type: 'motivation', text: 'Ты уже сделал сложное — подключился к блокчейну. Теперь сделай остальное.', author: '— Web3 Оракул' },
-      { type: 'motivation', text: 'Сила не в том, чтобы никогда не падать, а в том, чтобы каждый раз вставать.', author: '— Конфуций' },
-      { type: 'motivation', text: 'Будущее принадлежит тем, кто верит в красоту своих мечтаний.', author: '— Элеонора Рузвельт' },
-      { type: 'motivation', text: 'Единственный способ делать великую работу — любить то, что ты делаешь.', author: '— Стив Джобс' },
-      { type: 'motivation', text: 'Гений — это один процент вдохновения и девяносто девять процентов пота.', author: '— Томас Эдисон' },
-      { type: 'motivation', text: 'В середине каждой трудности кроется возможность.', author: '— Альберт Эйнштейн' },
-      { type: 'motivation', text: 'Твой кошелёк подключён. Теперь подключи и голову.', author: '— Web3 Оракул' },
-      { type: 'motivation', text: 'Действуй так, будто невозможное уже случилось.', author: '— Оракул Дня' },
-      { type: 'demotivation', text: 'Ты потратил комиссию сети, чтобы прочитать вот это. Подумай об этом.', author: '— Честный Оракул' },
-      { type: 'demotivation', text: 'Средний человек проживёт 27 375 дней. У тебя их стало на один меньше.', author: '— Статистика' },
-      { type: 'demotivation', text: 'Все планы хороши до первого столкновения с реальностью.', author: '— Майк Тайсон' },
-      { type: 'demotivation', text: 'Газ в сети Base сейчас дешевле, чем твоя уверенность в себе. Это что-то значит.', author: '— Оракул Base' },
-      { type: 'demotivation', text: 'Никто не ждёт тебя на вершине. Там одиноко и холодно.', author: '— Честный Оракул' },
-      { type: 'demotivation', text: 'Твоя транзакция подтверждена. К сожалению, это единственное, что сегодня подтверждено.', author: '— Web3 Оракул' },
-      { type: 'demotivation', text: 'Самая большая проблема не в том, что ты потерпишь неудачу. А в том, что ты даже не попробуешь.', author: '— Оракул Дня' },
+      // ── MOTIVATION: Classic wisdom ──────────────────────────────────────────
+      { type: 'motivation', text: 'The only way to do great work is to love what you do.', author: '— Steve Jobs' },
+      { type: 'motivation', text: 'In the middle of every difficulty lies opportunity.', author: '— Albert Einstein' },
+      { type: 'motivation', text: 'It does not matter how slowly you go as long as you do not stop.', author: '— Confucius' },
+      { type: 'motivation', text: 'Genius is one percent inspiration and ninety-nine percent perspiration.', author: '— Thomas Edison' },
+      { type: 'motivation', text: 'The future belongs to those who believe in the beauty of their dreams.', author: '— Eleanor Roosevelt' },
+      { type: 'motivation', text: 'Do not watch the clock. Do what it does. Keep going.', author: '— Sam Levenson' },
+      { type: 'motivation', text: 'Believe you can and you are halfway there.', author: '— Theodore Roosevelt' },
+      { type: 'motivation', text: 'Act as if what you do makes a difference. It does.', author: '— William James' },
+      { type: 'motivation', text: 'Success is not final, failure is not fatal — it is the courage to continue that counts.', author: '— Winston Churchill' },
+      { type: 'motivation', text: 'The secret of getting ahead is getting started.', author: '— Mark Twain' },
+      { type: 'motivation', text: 'What you get by achieving your goals is not as important as what you become by achieving them.', author: '— Henry Thoreau' },
+      { type: 'motivation', text: 'Hardships often prepare ordinary people for an extraordinary destiny.', author: '— C.S. Lewis' },
+      { type: 'motivation', text: 'Start where you are. Use what you have. Do what you can.', author: '— Arthur Ashe' },
+      { type: 'motivation', text: 'Everything you can imagine is real.', author: '— Pablo Picasso' },
+      { type: 'motivation', text: 'You are never too old to set another goal or to dream a new dream.', author: '— C.S. Lewis' },
+      { type: 'motivation', text: 'The only limit to our realization of tomorrow is our doubts of today.', author: '— F.D. Roosevelt' },
+      { type: 'motivation', text: 'It always seems impossible until it is done.', author: '— Nelson Mandela' },
+      { type: 'motivation', text: 'You miss 100% of the shots you do not take.', author: '— Wayne Gretzky' },
+      { type: 'motivation', text: 'Whether you think you can or think you cannot — you are right.', author: '— Henry Ford' },
+      { type: 'motivation', text: 'The best revenge is massive success.', author: '— Frank Sinatra' },
+      // ── MOTIVATION: World proverbs ──────────────────────────────────────────
+      { type: 'motivation', text: 'Fall seven times, stand up eight.', author: '— Japanese Proverb' },
+      { type: 'motivation', text: 'He who asks is a fool for five minutes, but he who does not ask remains a fool forever.', author: '— Chinese Proverb' },
+      { type: 'motivation', text: 'A smooth sea never made a skilled sailor.', author: '— English Proverb' },
+      { type: 'motivation', text: 'Even the longest journey begins with a single step.', author: '— Chinese Proverb' },
+      { type: 'motivation', text: 'The tree that bends in the storm survives; the one that resists breaks.', author: '— African Proverb' },
+      { type: 'motivation', text: 'The man who moves a mountain begins by carrying away small stones.', author: '— Confucius' },
+      { type: 'motivation', text: 'However long the night, the dawn will break.', author: '— African Proverb' },
+      { type: 'motivation', text: 'Rain does not fall on one roof alone.', author: '— Cameroonian Proverb' },
+      { type: 'motivation', text: 'Smooth roads do not make great drivers.', author: '— Latin Proverb' },
+      { type: 'motivation', text: 'A river cuts through rock not because of its power, but its persistence.', author: '— Jim Watkins' },
+      // ── MOTIVATION: Web3 / Oracle flavour ──────────────────────────────────
+      { type: 'motivation', text: 'Your wallet is connected. Now connect your ambition.', author: '— The Oracle' },
+      { type: 'motivation', text: 'Every block confirmed is proof of your persistence.', author: '— Web3 Oracle' },
+      { type: 'motivation', text: 'You paid the gas. Now burn through your limits too.', author: '— Base Oracle' },
+      { type: 'motivation', text: 'Decentralize your doubts. Commit your courage on-chain.', author: '— The Oracle' },
+      { type: 'motivation', text: 'The best time to start was genesis block. The second best time is now.', author: '— Web3 Oracle' },
+      { type: 'motivation', text: 'You already did the hard part — you showed up.', author: '— The Oracle' },
+      { type: 'motivation', text: 'Every transaction is a statement: I was here. I acted.', author: '— Base Oracle' },
+      // ── DEMOTIVATION: Dry / absurd ──────────────────────────────────────────
+      { type: 'demotivation', text: 'You paid a gas fee to read this. Sit with that for a moment.', author: '— The Honest Oracle' },
+      { type: 'demotivation', text: 'The average human lives 27,375 days. You just spent part of one on this.', author: '— Statistics' },
+      { type: 'demotivation', text: 'Somewhere out there, someone is doing exactly what you keep planning to do.', author: '— The Honest Oracle' },
+      { type: 'demotivation', text: 'Your transaction was confirmed. Unfortunately, that may be the highlight of your day.', author: '— Web3 Oracle' },
+      { type: 'demotivation', text: 'The Base network fee was cheaper than your last impulse purchase. Think about that.', author: '— Base Oracle' },
+      { type: 'demotivation', text: 'No one is coming to save you. But the gas is cheap, so at least you have that.', author: '— The Honest Oracle' },
+      { type: 'demotivation', text: 'You checked your phone 96 times today. This was one of those times.', author: '— Statistics' },
+      { type: 'demotivation', text: 'The blockchain remembers everything. Including this moment of hesitation.', author: '— The Oracle' },
+      { type: 'demotivation', text: 'You are not stuck. You are just very comfortable doing nothing.', author: '— The Honest Oracle' },
+      { type: 'demotivation', text: 'This page loaded in 1.2 seconds. You have been procrastinating for months.', author: '— Statistics' },
+      { type: 'demotivation', text: 'The network confirmed your transaction faster than you return emails.', author: '— Base Oracle' },
+      // ── DEMOTIVATION: Famous quotes, reframed ──────────────────────────────
+      { type: 'demotivation', text: 'Everyone has a plan until they get punched in the mouth.', author: '— Mike Tyson' },
+      { type: 'demotivation', text: 'Comparison is the thief of joy. And you compare yourself constantly.', author: '— After T. Roosevelt' },
+      { type: 'demotivation', text: 'Life is what happens while you are busy making other plans.', author: '— John Lennon' },
+      { type: 'demotivation', text: 'Not all those who wander are lost. But statistically, most of them are.', author: '— After Tolkien' },
+      { type: 'demotivation', text: 'The road to hell is paved with good intentions and unopened to-do lists.', author: '— The Oracle' },
+      { type: 'demotivation', text: 'Two roads diverged in a wood. You are still standing at the fork.', author: '— After Robert Frost' },
+      // ── DEMOTIVATION: World proverbs ────────────────────────────────────────
+      { type: 'demotivation', text: 'The nail that sticks up gets hammered down.', author: '— Japanese Proverb' },
+      { type: 'demotivation', text: 'No matter how far you have gone on the wrong road, turn back.', author: '— Turkish Proverb' },
+      { type: 'demotivation', text: 'When elephants fight, it is the grass that suffers.', author: '— African Proverb' },
+      { type: 'demotivation', text: 'He who chases two rabbits catches neither.', author: '— Roman Proverb' },
+      { type: 'demotivation', text: 'A frog in a well cannot conceive of the ocean.', author: '— Chinese Proverb' },
+      { type: 'demotivation', text: 'The dogs bark, but the caravan moves on.', author: '— Arabic Proverb' },
+      { type: 'demotivation', text: 'Even the best needle is not sharp at both ends.', author: '— Chinese Proverb' },
+      { type: 'demotivation', text: 'Fool me once, shame on you. Fool me twice, shame on me.', author: '— English Proverb' },
     ];
 
     // ─── State ────────────────────────────────────────────────────────────────
@@ -719,21 +775,42 @@
       document.getElementById('txLinkContainer').innerHTML = '';
 
       try {
-        // Self-transfer of 0 ETH — user only pays gas
+        // Проверяем баланс перед отправкой
+        const balance = await provider.getBalance(userAddress);
+        const feeData = await provider.getFeeData();
+        const gasPrice = feeData.gasPrice || feeData.maxFeePerGas || 1000000n;
+        const estimatedGas = gasPrice * 21000n;
+
+        if (balance < estimatedGas) {
+          setStatus('❌ Insufficient ETH for gas on Base. Top up your balance and try again.', 'error');
+          btn.innerHTML = 'Send Transaction → Reveal Message';
+          btn.disabled = false;
+          return;
+        }
+
+        // Проверяем что мы в Base Mainnet
+        const network = await provider.getNetwork();
+        if (network.chainId !== 8453n) {
+          setStatus('❌ Switch to Base Mainnet in your wallet and reconnect.', 'error');
+          btn.innerHTML = 'Send Transaction → Reveal Message';
+          btn.disabled = false;
+          return;
+        }
+
+        // Self-transfer 0 ETH — платишь только газ сети
         const tx = await signer.sendTransaction({
           to: userAddress,
           value: 0n,
-          data: '0x4f7261636c65', // "Oracle" in hex, just a memo
         });
 
-        setStatus(`<span class="spinner"></span>Транзакция отправлена. Ожидаем подтверждения блокчейна...`, 'info');
+        setStatus(`<span class="spinner"></span>Транзакция отправлена. Ожидаем подтверждения...`, 'info');
 
         const receipt = await tx.wait();
 
         // Show TX link
         document.getElementById('txLinkContainer').innerHTML =
           `<a class="tx-link" href="https://basescan.org/tx/${tx.hash}" target="_blank" rel="noopener">
-            Открыть на Basescan ↗
+            View on Basescan ↗
           </a>`;
 
         // Reveal!
@@ -745,15 +822,59 @@
         setStatus('✦ Транзакция подтверждена. Послание раскрыто.', 'success');
 
       } catch (err) {
-        let msg = 'Транзакция отклонена или произошла ошибка.';
-        if (err.code === 4001 || err.code === 'ACTION_REJECTED') msg = 'Транзакция отменена пользователем.';
+        console.error('TX Error:', err);
+        let msg = '';
+        const code = err?.code;
+        const reason = err?.reason || err?.message || '';
+
+        if (code === 4001 || code === 'ACTION_REJECTED' || reason.includes('rejected') || reason.includes('denied')) {
+          msg = '❌ Transaction rejected in wallet.';
+        } else if (reason.includes('insufficient funds') || reason.includes('insufficient balance')) {
+          msg = '❌ Insufficient ETH for gas. Top up your Base balance.';
+        } else if (reason.includes('network') || reason.includes('chain')) {
+          msg = '❌ Network error. Make sure your wallet is on Base Mainnet.';
+        } else {
+          msg = `❌ Error: ${reason.slice(0, 120) || 'Unknown error. Open browser console (F12) for details.'}`;
+        }
+
         setStatus(msg, 'error');
-        btn.innerHTML = 'Отправить транзакцию → Получить послание';
+        btn.innerHTML = 'Send Transaction → Reveal Message';
         btn.disabled = false;
       }
     }
 
-    // ─── Disconnect ───────────────────────────────────────────────────────────
+    // ─── Try Again ────────────────────────────────────────────────────────────────────────
+    function tryAgain() {
+      // Pick a NEW random phrase (pure random this time)
+      const idx = Math.floor(Math.random() * phrases.length);
+      selectedPhrase = phrases[idx];
+
+      // Reset phrase display to locked/blurred
+      const inner = document.getElementById('phraseInner');
+      const overlay = document.getElementById('lockOverlay');
+      inner.style.filter = 'blur(8px)';
+      inner.classList.remove('reveal-anim');
+      overlay.classList.remove('hidden');
+
+      // Show send TX button again, hide try again
+      document.getElementById('txBtn').classList.remove('hidden');
+      document.getElementById('txBtn').innerHTML = 'Send Transaction → Reveal Message';
+      document.getElementById('txBtn').disabled = false;
+      document.getElementById('tryAgainBtn').classList.add('hidden');
+      document.getElementById('txLinkContainer').innerHTML = '';
+
+      // Update phrase content (still blurred)
+      document.getElementById('phraseText').textContent = selectedPhrase.text;
+      document.getElementById('phraseTag').textContent = selectedPhrase.type === 'motivation' ? '❖ Motivation' : '❖ Demotivation';
+      document.getElementById('phraseTag').className = 'phrase-tag ' + selectedPhrase.type;
+      document.getElementById('phraseAuthor').textContent = selectedPhrase.author;
+
+      updateSteps(2);
+      clearStatus();
+      setStatus('A new message awaits. Send another transaction to reveal it.', 'info');
+    }
+
+        // ─── Disconnect ───────────────────────────────────────────────────────────
     function disconnectWallet() {
       provider = null;
       signer = null;
@@ -766,9 +887,10 @@
       document.getElementById('connectBtn').disabled = false;
       document.getElementById('disconnectBtn').classList.add('hidden');
       document.getElementById('txBtn').classList.add('hidden');
-      document.getElementById('txBtn').innerHTML = 'Отправить транзакцию → Получить послание';
+      document.getElementById('txBtn').innerHTML = 'Send Transaction → Reveal Message';
       document.getElementById('txBtn').disabled = false;
       document.getElementById('txLinkContainer').innerHTML = '';
+      document.getElementById('tryAgainBtn').classList.add('hidden');
       showLockedDefault();
       clearStatus();
       updateSteps(1);
